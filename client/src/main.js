@@ -125,7 +125,8 @@ socket.on("state", (snap) => {
 });
 
 socket.on("connect_error", () => {
-  hud.toast("Cannot reach the server on port 3091");
+  const origin = serverOrigin() || "this host";
+  hud.toast(`Match server is not reachable at ${origin}. Run npm run dev for a local server.`);
 });
 
 document.querySelectorAll(".team").forEach((btn) => {

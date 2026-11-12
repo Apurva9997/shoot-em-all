@@ -4,7 +4,7 @@
 
 A browser tactical first-person shooter in the shape of Counter-Strike 1.6's bomb mode, built from scratch. The map, sandstone textures, weapon viewmodels, hitboxes, and sound are generated in code. Nothing is fetched from a CDN at runtime except the npm packages you install.
 
-The live site is the Netlify client. The match itself runs on a public Node server (`shoot-em-all.onrender.com`) because a 30 Hz game loop cannot live in a static host. The first visit after an idle stretch can take half a minute while that free server wakes up.
+The live site is the Netlify client. A 30 Hz game loop cannot run on a static host, so online matches need the Node server in `server/`. Until that process is deployed, the page loads and the round starts only when you run the server yourself. `render.yaml` is a blueprint for a free Node host; point `VITE_SERVER_URL` at it when you build the client.
 
 The server is authoritative. It runs a 30 Hz loop, validates movement against the same physics the client predicts with, and resolves hitscan against head, torso, and leg boxes. The client renders with Three.js, interpolates other players, and draws a translucent amber HUD.
 
@@ -61,7 +61,7 @@ npm run build --prefix client
 npx netlify deploy --prod --dir=client/dist
 ```
 
-The authoritative server is the Node process in `server/`. `render.yaml` builds the client and starts that process so a hosted page can play against it. Set `VITE_SERVER_URL` at client build time if the server is not `https://shoot-em-all.onrender.com`.
+The authoritative server is the Node process in `server/`. `render.yaml` builds the client and starts that process. After that host is up, rebuild the client with `VITE_SERVER_URL` set to its public URL so the Netlify page connects to it.
 
 ## License
 
