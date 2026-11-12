@@ -1,0 +1,19 @@
+{
+  "name": "shoot-em-all",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser tactical FPS inspired by Counter-Strike 1.6. Procedural de_dust2, authoritative 30Hz server.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "start": "npm run build --prefix client && npm start --prefix server",
+    "test": "node scripts/selftest.mjs",
+    "postinstall": "npm install --prefix server && npm install --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

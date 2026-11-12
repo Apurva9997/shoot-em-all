@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>de_dust2 — tactical FPS</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="view"></canvas>
+      <button id="resume" type="button" hidden>Click to capture mouse</button>
+      <div id="blocker">
+        <div class="panel join-panel">
+          <p class="kicker">open range // de_dust2</p>
+          <h1>Shoot 'Em All</h1>
+          <p class="lede">A browser tactical shooter. Sandstone, rifles, and a bomb. No downloads, no accounts.</p>
+          <label>Callsign <input id="name" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Player" /></label>
+          <label>Room <input id="room" maxlength="12" autocomplete="off" spellcheck="false" value="dust2" /></label>
+          <div class="team-row">
+            <button type="button" data-team="T" class="team t">Terrorist</button>
+            <button type="button" data-team="CT" class="team ct">Counter-Terrorist</button>
+          </div>
+          <p class="hint">Click the team to deploy. Then click the view to capture the mouse.</p>
+        </div>
+      </div>
+      <div id="hud" hidden>
+        <div id="radar"><canvas id="radar-canvas" width="168" height="168"></canvas></div>
+        <div id="killfeed"></div>
+        <div id="banner"></div>
+        <div id="crosshair" class="cross">
+          <i></i><i></i><i></i><i></i>
+        </div>
+        <div id="scope" hidden>
+          <div class="scope-ring"></div>
+          <div class="scope-v"></div>
+          <div class="scope-h"></div>
+        </div>
+        <div id="dmg"></div>
+        <div id="bottom">
+          <div class="stat">
+            <span class="lbl">Health</span>
+            <b id="hp">100</b>
+          </div>
+          <div class="stat">
+            <span class="lbl">Armor</span>
+            <b id="armor">0</b>
+          </div>
+          <div class="stat timer">
+            <span class="lbl" id="phase-label">Round</span>
+            <b id="timer">01:55</b>
+          </div>
+          <div class="stat money">
+            <span class="lbl">Money</span>
+            <b id="money">$800</b>
+          </div>
+          <div class="stat ammo">
+            <span class="lbl" id="gun-name">Glock-18</span>
+            <b id="ammo">20 | 120</b>
+          </div>
+        </div>
+        <div id="action"></div>
+        <div id="scoreboard" hidden></div>
+        <div id="buymenu" hidden></div>
+        <div id="toast"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
