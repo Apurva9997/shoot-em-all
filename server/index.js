@@ -10,26 +10,44 @@ import { createMatch } from "./game.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT) || 3091;
 const CLIENT_DIST = path.resolve(__dirname, "../client/dist");
+const SERVE_STATIC = process.env.SERVE_STATIC !== "0";
+const ALLOWED_ORIGINS = (
+  process.env.GAME_ORIGINS ||
+  "https://shoot-em-all-apurva.netlify.app,http://localhost:5183,http://127.0.0.1:5183"
+)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 const app = express();
+app.disable("x-powered-by");
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  }
+  if (req.method === "OPTIONS") return res.sendStatus(204);
   next();
 });
-app.use(express.static(CLIENT_DIST));
 app.get("/health", (_req, res) => {
   res.json({ ok: true, tick: TICK_RATE, rooms: rooms.size });
 });
-app.use((req, res, next) => {
-  if (req.method !== "GET" || req.path.startsWith("/socket.io")) return next();
-  res.sendFile(path.join(CLIENT_DIST, "index.html"), (err) => {
-    if (err) res.status(200).type("html").send(devHint());
+if (SERVE_STATIC) {
+  app.use(express.static(CLIENT_DIST));
+  app.use((req, res, next) => {
+    if (req.method !== "GET" || req.path.startsWith("/socket.io")) return next();
+    res.sendFile(path.join(CLIENT_DIST, "index.html"), (err) => {
+      if (err) res.status(200).type("html").send(devHint());
+    });
   });
-});
+}
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: { origin: ALLOWED_ORIGINS, methods: ["GET", "POST"] },
 });
 
 const rooms = new Map();
